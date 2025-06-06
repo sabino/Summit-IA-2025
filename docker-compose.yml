@@ -1,0 +1,45 @@
+version: '3.9'
+services:
+  db-setup:
+    build:
+      context: .
+      dockerfile: agentic_ai/backend_services/data/Dockerfile
+    volumes:
+      - ./agentic_ai/backend_services/data:/app
+  mcp:
+    build:
+      context: .
+      dockerfile: agentic_ai/backend_services/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_PATH=/app/agentic_ai/backend_services/data/provizio.db
+    volumes:
+      - ./agentic_ai/backend_services/data:/app/agentic_ai/backend_services/data
+    depends_on:
+      - db-setup
+  backend:
+    build:
+      context: .
+      dockerfile: agentic_ai/applications/Dockerfile.backend
+    ports:
+      - "7000:7000"
+    environment:
+      - MCP_SERVER_URI=http://mcp:8000/sse
+      - DB_PATH=/app/agentic_ai/backend_services/data/provizio.db
+    volumes:
+      - ./agentic_ai:/app/agentic_ai
+    depends_on:
+      - mcp
+  frontend:
+    build:
+      context: .
+      dockerfile: agentic_ai/applications/Dockerfile.frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - BACKEND_URL=http://backend:7000
+    volumes:
+      - ./agentic_ai:/app/agentic_ai
+    depends_on:
+      - backend
