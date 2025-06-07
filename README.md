@@ -1,4 +1,5 @@
-# Workshop de Agentes Provizio
+# Workshop: Do Prompt ao Protocolo  
+## Agentes inteligentes com MCP, RAG e IA aplicada
 
 Este repositório contém o código de demonstração do workshop **Do Prompt ao Protocolo** apresentado no Summit de Inteligência Artificial. O objetivo é mostrar como criar agentes autônomos ou colaborativos utilizando ferramentas open source, o Model Context Protocol (MCP) e uma arquitetura de microsserviços flexível.
 
