@@ -11,13 +11,41 @@ Run:
     python smoke_test_mcp.py  
 """  
   
-import os, asyncio, logging, json  
-from typing import Any, List, Dict  
+import os, asyncio, logging, json
+from typing import Any, List, Dict
+
+import pytest
   
 from fastmcp import Client  
 from fastmcp.exceptions import ClientError  
   
-MCP_URL = os.getenv("MCP_URL", "http://127.0.0.1:8000/sse")  
+MCP_URL = os.getenv("MCP_URL", "http://127.0.0.1:8000/sse")
+
+pytestmark = pytest.mark.asyncio
+
+
+@pytest.fixture(scope="module")
+async def client():
+    try:
+        async with Client(MCP_URL) as c:
+            yield c
+    except Exception:
+        pytest.skip("MCP server not running")
+
+
+@pytest.fixture
+def cust_id() -> int:
+    return 1
+
+
+@pytest.fixture
+def sub_id() -> int:
+    return 1
+
+
+@pytest.fixture
+def query() -> str:
+    return "Invoice Adjustment Policy"
   
 logging.basicConfig(  
     level=logging.INFO, format="%(levelname)s | %(message)s", force=True  
